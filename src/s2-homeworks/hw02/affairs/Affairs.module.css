@@ -2,9 +2,12 @@
     display: flex;
     gap: 24px;
     margin-bottom: 32px;
+    padding-top: 32px;
+    padding-left: 70px;
 }
 
 .all {
+
     --color: #06c;
 }
 
@@ -48,8 +51,12 @@
 }
 
 .affairs {
+
     display: flex;
     gap: 17px;
     flex-wrap: wrap;
+    /*flex-direction: column;*/
     max-width: 450px;
+    margin-left: 70px;
+    margin-bottom: 70px;
 }
