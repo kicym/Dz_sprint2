@@ -19,6 +19,7 @@ const HW13 = () => {
     const [text, setText] = useState('')
     const [info, setInfo] = useState('')
     const [image, setImage] = useState('')
+    const [loading, setLoading] = useState(false)
 
     const send = (x?: boolean | null) => () => {
         const url =
@@ -30,18 +31,52 @@ const HW13 = () => {
         setImage('')
         setText('')
         setInfo('...loading')
+        setLoading(true)
 
         axios
             .post(url, {success: x})
             .then((res) => {
-                setCode('Код 200!')
+                setLoading(false)
+                setCode(`Код ${res.status}!`)
                 setImage(success200)
+
                 // дописать
+                setText(res.data.text || 'Успешный запрос')
+                setInfo(res.data.info || 'Операция выполнена успешно')
 
             })
             .catch((e) => {
                 // дописать
+                setLoading(false)
 
+                if (e.response) {
+                    const status = e.response.status
+
+                    setCode(`Ошибка ${status}!`)
+                    setText(e.response.data.text || 'Что-то пошло не так')
+                    setInfo(e.response.data.info || 'Попробуйте позже')
+
+                    // Выбор SVG в зависимости от статуса
+                    if (status === 400) {
+                        setImage(error400)
+                    } else if (status === 500) {
+                        setImage(error500)
+                    } else {
+                        setImage(errorUnknown)
+                    }
+                } else if (e.request) {
+                    // Запрос был сделан, но ответ не получен
+                    setCode('Ошибка сети!')
+                    setText('Сервер недоступен')
+                    setInfo('Проверьте подключение к интернету')
+                    setImage(errorUnknown)
+                } else {
+                    // Произошла ошибка при настройке запроса
+                    setCode('Ошибка!')
+                    setText('Неизвестная ошибка')
+                    setInfo('Попробуйте ещё раз')
+                    setImage(errorUnknown)
+                }
             })
     }
 
@@ -56,7 +91,7 @@ const HW13 = () => {
                         onClick={send(true)}
                         xType={'secondary'}
                         // дописать
-
+                        disabled={loading}
                     >
                         Send true
                     </SuperButton>
@@ -65,6 +100,7 @@ const HW13 = () => {
                         onClick={send(false)}
                         xType={'secondary'}
                         // дописать
+                        disabled={loading}
 
                     >
                         Send false
@@ -74,7 +110,7 @@ const HW13 = () => {
                         onClick={send(undefined)}
                         xType={'secondary'}
                         // дописать
-
+                        disabled={loading}
                     >
                         Send undefined
                     </SuperButton>
@@ -83,7 +119,7 @@ const HW13 = () => {
                         onClick={send(null)} // имитация запроса на не корректный адрес
                         xType={'secondary'}
                         // дописать
-
+                        disabled={loading}
                     >
                         Send null
                     </SuperButton>
