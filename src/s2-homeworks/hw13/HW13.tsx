@@ -265,6 +265,7 @@
 //
 // export default HW13
 
+
 import React, {useState} from 'react'
 import s2 from '../../s1-main/App.module.css'
 import s from './HW13.module.css'
@@ -304,7 +305,7 @@ const mockAdapter = (config: any) => {
                 response: {
                     data: {
                         text: 'эмитация ошибки на сервере',
-                        info: 'Внутренняя ошибка сервера'
+                        info: 'ошибка 500 - обычно означает что что-то сломалось на сервере, например база данных)'
                     },
                     status: 500,
                     statusText: 'Internal Server Error',
@@ -318,7 +319,7 @@ const mockAdapter = (config: any) => {
                 response: {
                     data: {
                         text: 'Ты не отправил success в body вообще!',
-                        info: 'Некорректный запрос'
+                        info: 'ошибка 400 - обычно означает что скорее всего фронт отправил что-то не то на бэк!'
                     },
                     status: 400,
                     statusText: 'Bad Request',
@@ -328,6 +329,7 @@ const mockAdapter = (config: any) => {
                 config: config,
             })
         } else if (success === null) {
+            // Для null - ошибка сети с info: 'Error'
             return Promise.reject({
                 request: {},
                 config: config,
@@ -337,7 +339,7 @@ const mockAdapter = (config: any) => {
         }
     }
 
-    // Для остальных запросов - стандартный адаптер
+    // Для остальных запросов - стандартное поведение
     return axios.defaults.adapter!(config)
 }
 
@@ -354,14 +356,13 @@ const HW13 = () => {
     const [loading, setLoading] = useState(false)
 
     const send = (x?: boolean | null) => () => {
-        const url = x === null
-            ? 'https://xxxxxx.ccc'
-            : '/api/3.0/homework/test'
+        // Для всех кнопок используем один URL
+        const url = '/api/3.0/homework/test'
 
         setCode('')
         setImage('')
         setText('')
-        setInfo('...loading')
+        setInfo('')
         setLoading(true)
 
         instance
