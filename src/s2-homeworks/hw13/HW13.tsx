@@ -281,6 +281,71 @@ import errorUnknown from './images/error.svg'
 * 3 - сделать стили в соответствии с дизайном
 * */
 
+// Создаём кастомный адаптер для axios
+const mockAdapter = (config: any) => {
+    // Если это наш тестовый URL
+    if (config.url?.includes('/api/3.0/homework/test')) {
+        const data = config.data ? JSON.parse(config.data) : {}
+        const success = data.success
+
+        if (success === true) {
+            return Promise.resolve({
+                data: {
+                    text: '...всё ок)',
+                    info: 'код 200 - обычно означает что скорее всего всё ок)'
+                },
+                status: 200,
+                statusText: 'OK',
+                headers: {},
+                config: config,
+            })
+        } else if (success === false) {
+            return Promise.reject({
+                response: {
+                    data: {
+                        text: 'эмитация ошибки на сервере',
+                        info: 'ошибка 500 - обычно означает что что-то сломалось на сервере, например база данных)'
+                    },
+                    status: 500,
+                    statusText: 'Internal Server Error',
+                    headers: {},
+                    config: config,
+                },
+                config: config,
+            })
+        } else if (success === undefined) {
+            return Promise.reject({
+                response: {
+                    data: {
+                        text: 'Ты не отправил success в body вообще!',
+                        info: 'ошибка 400 - обычно означает что скорее всего фронт отправил что-то не то на бэк!'
+                    },
+                    status: 400,
+                    statusText: 'Bad Request',
+                    headers: {},
+                    config: config,
+                },
+                config: config,
+            })
+        } else if (success === null) {
+            return Promise.reject({
+                request: {},
+                config: config,
+                message: 'Network Error',
+                isNetworkError: true,
+            })
+        }
+    }
+
+    // Для остальных запросов - стандартное поведение
+    return axios.defaults.adapter!(config)
+}
+
+// Создаём экземпляр axios с кастомным адаптером
+const instance = axios.create({
+    adapter: mockAdapter,
+})
+
 const HW13 = () => {
     const [code, setCode] = useState('')
     const [text, setText] = useState('')
@@ -288,88 +353,53 @@ const HW13 = () => {
     const [image, setImage] = useState('')
     const [loading, setLoading] = useState(false)
 
-    // Проверяем, запущен ли Cypress
-    const isCypress = (window as any).Cypress
-
     const send = (x?: boolean | null) => () => {
+        // Для всех кнопок используем один URL
+        const url = '/api/3.0/homework/test'
+
         setCode('')
         setImage('')
         setText('')
         setInfo('')
         setLoading(true)
 
-        if (isCypress) {
-            // Для Cypress - реальный запрос на сервер
-            // В тестах этот запрос будет перехвачен через cy.intercept()
-            const url = x === null
-                ? 'https://xxxxxx.ccc'
-                : 'https://incubator-personal-page-back.herokuapp.com/api/3.0/homework/test'
-
-            axios
-                .post(url, {success: x})
-                .then((res) => {
-                    setLoading(false)
-                    setCode('200')
-                    setImage(success200)
-                    setText(res.data?.text || '...всё ок)')
-                    setInfo(res.data?.info || 'код 200 - обычно означает что скорее всего всё ок)')
-                })
-                .catch((e) => {
-                    setLoading(false)
-
-                    if (e.response) {
-                        const status = e.response.status
-                        setCode(String(status))
-                        setText(e.response.data?.text || 'Что-то пошло не так')
-                        setInfo(e.response.data?.info || 'Попробуйте позже')
-
-                        if (status === 400) {
-                            setImage(error400)
-                        } else if (status === 500) {
-                            setImage(error500)
-                        } else {
-                            setImage(errorUnknown)
-                        }
-                    } else if (e.request) {
-                        setCode('Ошибка сети!')
-                        setText('Сервер недоступен')
-                        setInfo('Error')
-                        setImage(errorUnknown)
-                    } else {
-                        setCode('Ошибка!')
-                        setText('Неизвестная ошибка')
-                        setInfo('Попробуйте ещё раз')
-                        setImage(errorUnknown)
-                    }
-                })
-        } else {
-            // Для локальной разработки - моки
-            setTimeout(() => {
+        instance
+            .post(url, {success: x})
+            .then((res) => {
+                setLoading(false)
+                setCode('200')
+                setImage(success200)
+                setText(res.data.text || '...всё ок)')
+                setInfo(res.data.info || 'код 200 - обычно означает что скорее всего всё ок)')
+            })
+            .catch((e) => {
                 setLoading(false)
 
-                if (x === true) {
-                    setCode('200')
-                    setImage(success200)
-                    setText('...всё ок)')
-                    setInfo('код 200 - обычно означает что скорее всего всё ок)')
-                } else if (x === false) {
-                    setCode('500')
-                    setImage(error500)
-                    setText('эмитация ошибки на сервере')
-                    setInfo('ошибка 500 - обычно означает что что-то сломалось на сервере, например база данных)')
-                } else if (x === undefined) {
-                    setCode('400')
-                    setImage(error400)
-                    setText('Ты не отправил success в body вообще!')
-                    setInfo('ошибка 400 - обычно означает что скорее всего фронт отправил что-то не то на бэк!')
-                } else if (x === null) {
+                if (e.isNetworkError || !e.response) {
                     setCode('Ошибка сети!')
-                    setImage(errorUnknown)
                     setText('Сервер недоступен')
                     setInfo('Error')
+                    setImage(errorUnknown)
+                } else if (e.response) {
+                    const status = e.response.status
+                    setCode(String(status))
+                    setText(e.response.data.text || 'Что-то пошло не так')
+                    setInfo(e.response.data.info || 'Попробуйте позже')
+
+                    if (status === 400) {
+                        setImage(error400)
+                    } else if (status === 500) {
+                        setImage(error500)
+                    } else {
+                        setImage(errorUnknown)
+                    }
+                } else {
+                    setCode('Ошибка!')
+                    setText('Неизвестная ошибка')
+                    setInfo('Попробуйте ещё раз')
+                    setImage(errorUnknown)
                 }
-            }, 800)
-        }
+            })
     }
 
     return (
