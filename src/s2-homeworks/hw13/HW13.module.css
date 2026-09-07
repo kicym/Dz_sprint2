@@ -1,154 +1,208 @@
+/*!*.buttonsContainer {*!*/
+/*!*}*!*/
+
+/*!*.responseContainer {*!*/
+/*!*}*!*/
+
+/*!*.imageContainer {*!*/
+/*!*}*!*/
+
+/*!*.image {*!*/
+/*!*}*!*/
+
+/*!*.textContainer{*!*/
+/*!*}*!*/
+
+/*!*.code {*!*/
+/*!*}*!*/
+
+/*!*.text {*!*/
+/*!*}*!*/
+/*!*.info {*!*/
+/*!*}*!*/
+
+
 /*.buttonsContainer {*/
+/*    display: flex;*/
+/*    gap: 15px;*/
+/*    justify-content: center;*/
+/*    margin-bottom: 30px;*/
+/*    flex-wrap: wrap;*/
 /*}*/
 
 /*.responseContainer {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    justify-content: center;*/
+/*    gap: 40px;*/
+/*    padding: 30px;*/
+/*    background: #f5f7fa;*/
+/*    border-radius: 16px;*/
+/*    min-height: 250px;*/
+/*    border: 1px solid #e0e5ec;*/
 /*}*/
 
 /*.imageContainer {*/
+/*    flex: 0 0 auto;*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    justify-content: center;*/
+/*    width: 200px;*/
+/*    height: 200px;*/
 /*}*/
 
 /*.image {*/
+/*    max-width: 100%;*/
+/*    max-height: 100%;*/
+/*    object-fit: contain;*/
+/*    animation: fadeIn 0.3s ease-in;*/
 /*}*/
 
-/*.textContainer{*/
+/*.textContainer {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    gap: 8px;*/
+/*    flex: 1;*/
+/*    min-width: 200px;*/
 /*}*/
 
 /*.code {*/
+/*    font-size: 28px;*/
+/*    font-weight: 700;*/
+/*    color: #1a1a2e;*/
+/*    letter-spacing: 0.5px;*/
 /*}*/
 
 /*.text {*/
+/*    font-size: 18px;*/
+/*    font-weight: 500;*/
+/*    color: #2d2d44;*/
+/*    line-height: 1.4;*/
 /*}*/
+
 /*.info {*/
+/*    font-size: 14px;*/
+/*    color: #6b7280;*/
+/*    margin-top: 4px;*/
+/*    line-height: 1.5;*/
 /*}*/
 
+/*!* Анимация для плавного появления *!*/
+/*@keyframes fadeIn {*/
+/*    from {*/
+/*        opacity: 0;*/
+/*        transform: scale(0.9);*/
+/*    }*/
+/*    to {*/
+/*        opacity: 1;*/
+/*        transform: scale(1);*/
+/*    }*/
+/*}*/
 
+/*!* Адаптивность для мобильных устройств *!*/
+/*@media (max-width: 768px) {*/
+/*    .responseContainer {*/
+/*        flex-direction: column;*/
+/*        gap: 20px;*/
+/*        padding: 20px;*/
+/*        min-height: 200px;*/
+/*    }*/
+
+/*    .imageContainer {*/
+/*        width: 150px;*/
+/*        height: 150px;*/
+/*    }*/
+
+/*    .code {*/
+/*        font-size: 22px;*/
+/*        text-align: center;*/
+/*    }*/
+
+/*    .text {*/
+/*        font-size: 16px;*/
+/*        text-align: center;*/
+/*    }*/
+
+/*    .info {*/
+/*        font-size: 13px;*/
+/*        text-align: center;*/
+/*    }*/
+
+/*    .buttonsContainer {*/
+/*        gap: 10px;*/
+/*    }*/
+/*}*/
+
+/*@media (max-width: 480px) {*/
+/*    .imageContainer {*/
+/*        width: 120px;*/
+/*        height: 120px;*/
+/*    }*/
+
+/*    .code {*/
+/*        font-size: 18px;*/
+/*    }*/
+
+/*    .text {*/
+/*        font-size: 14px;*/
+/*    }*/
+
+/*    .responseContainer {*/
+/*        padding: 15px;*/
+/*        min-height: 180px;*/
+/*    }*/
+/*}*/
+
+/* Контейнер для кнопок */
 .buttonsContainer {
     display: flex;
-    gap: 15px;
-    justify-content: center;
-    margin-bottom: 30px;
-    flex-wrap: wrap;
+    gap: 12px; /* отступы между кнопками */
+    margin-bottom: 40px; /* отступ снизу до контента */
 }
 
+/* Главный контейнер ответа — выстраивает картинку и текст в ряд */
 .responseContainer {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 40px;
-    padding: 30px;
-    background: #f5f7fa;
-    border-radius: 16px;
-    min-height: 250px;
-    border: 1px solid #e0e5ec;
+    align-items: center; /* выравнивание по вертикали по центру */
+    gap: 40px; /* расстояние между картинкой и текстом */
+    min-height: 250px; /* фиксируем высоту, чтобы интерфейс не прыгал при загрузке */
 }
 
+/* Контейнер для SVG */
 .imageContainer {
-    flex: 0 0 auto;
+    width: 300px; /* подберите ширину под вашу картинку ракеты */
     display: flex;
-    align-items: center;
     justify-content: center;
-    width: 200px;
-    height: 200px;
 }
 
 .image {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    animation: fadeIn 0.3s ease-in;
+    width: 100%;
+    height: auto;
 }
 
+/* Контейнер для текстовых блоков */
 .textContainer {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    flex: 1;
-    min-width: 200px;
+    gap: 8px; /* отступы между строками Код / Текст / Инфо */
 }
 
+/* Стили для заголовка (например, Код 200!) */
 .code {
-    font-size: 28px;
-    font-weight: 700;
-    color: #1a1a2e;
-    letter-spacing: 0.5px;
+    font-size: 32px;
+    font-weight: bold;
+    color: #000000;
 }
 
+/* Стили для подтекста */
 .text {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 500;
-    color: #2d2d44;
-    line-height: 1.4;
+    color: #000000;
 }
 
+/* Стили для детального описания */
 .info {
     font-size: 14px;
-    color: #6b7280;
-    margin-top: 4px;
-    line-height: 1.5;
-}
-
-/* Анимация для плавного появления */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-/* Адаптивность для мобильных устройств */
-@media (max-width: 768px) {
-    .responseContainer {
-        flex-direction: column;
-        gap: 20px;
-        padding: 20px;
-        min-height: 200px;
-    }
-
-    .imageContainer {
-        width: 150px;
-        height: 150px;
-    }
-
-    .code {
-        font-size: 22px;
-        text-align: center;
-    }
-
-    .text {
-        font-size: 16px;
-        text-align: center;
-    }
-
-    .info {
-        font-size: 13px;
-        text-align: center;
-    }
-
-    .buttonsContainer {
-        gap: 10px;
-    }
-}
-
-@media (max-width: 480px) {
-    .imageContainer {
-        width: 120px;
-        height: 120px;
-    }
-
-    .code {
-        font-size: 18px;
-    }
-
-    .text {
-        font-size: 14px;
-    }
-
-    .responseContainer {
-        padding: 15px;
-        min-height: 180px;
-    }
+    color: #616161;
 }

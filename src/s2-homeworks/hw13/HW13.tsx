@@ -1,3 +1,5 @@
+
+
 import React, {useState} from 'react'
 import s2 from '../../s1-main/App.module.css'
 import s from './HW13.module.css'
@@ -19,44 +21,33 @@ const HW13 = () => {
     const [text, setText] = useState('')
     const [info, setInfo] = useState('')
     const [image, setImage] = useState('')
-    const [loading, setLoading] = useState(false)
-
     const send = (x?: boolean | null) => () => {
         const url =
             x === null
-                ? 'https://xxxxxx.ccc' // имитация запроса на не корректный адрес
-                : 'https://incubator-personal-page-back.herokuapp.com/api/3.0/homework/test'
+                ? 'https://xxxxxx.ccc' // имитация запроса на некорректный адрес
+                : 'https://samurai.it-incubator.io/api/3.0/homework/test'
 
         setCode('')
         setImage('')
         setText('')
         setInfo('...loading')
-        setLoading(true)
 
         axios
             .post(url, {success: x})
             .then((res) => {
-                setLoading(false)
-                setCode(`Код ${res.status}!`)
+                setCode('Код 200!')
                 setImage(success200)
-
-                // дописать
-                setText(res.data.text || 'Успешный запрос')
-                setInfo(res.data.info || 'Операция выполнена успешно')
-
+                setText(res.data.text)
+                setInfo(res.data.info)
             })
             .catch((e) => {
-                // дописать
-                setLoading(false)
-
-                if (e.response) {
+                // Если сервер ответил и статус ошибки настоящий (например, 400 или 500)
+                if (e.response && e.response.status !== 0) {
                     const status = e.response.status
-
                     setCode(`Ошибка ${status}!`)
-                    setText(e.response.data.text || 'Что-то пошло не так')
-                    setInfo(e.response.data.info || 'Попробуйте позже')
+                    setText(e.response.data.text)
+                    setInfo(e.response.data.info)
 
-                    // Выбор SVG в зависимости от статуса
                     if (status === 400) {
                         setImage(error400)
                     } else if (status === 500) {
@@ -64,17 +55,12 @@ const HW13 = () => {
                     } else {
                         setImage(errorUnknown)
                     }
-                } else if (e.request) {
-                    // Запрос был сделан, но ответ не получен
-                    setCode('Ошибка сети!')
-                    setText('Сервер недоступен')
-                    setInfo('Проверьте подключение к интернету')
-                    setImage(errorUnknown)
                 } else {
-                    // Произошла ошибка при настройке запроса
+                    // Сюда мы гарантированно попадаем при сетевой ошибке (кнопка Send null),
+                    // даже если Axios ошибочно вернул status: 0
                     setCode('Ошибка!')
-                    setText('Неизвестная ошибка')
-                    setInfo('Попробуйте ещё раз')
+                    setText(e.message)
+                    setInfo(e.name)
                     setImage(errorUnknown)
                 }
             })
@@ -90,8 +76,8 @@ const HW13 = () => {
                         id={'hw13-send-true'}
                         onClick={send(true)}
                         xType={'secondary'}
-                        // дописать
-                        disabled={loading}
+                        // 2 - Дизэйблим кнопку, пока строка info равна '...loading'
+                        disabled={info === '...loading'}
                     >
                         Send true
                     </SuperButton>
@@ -99,9 +85,8 @@ const HW13 = () => {
                         id={'hw13-send-false'}
                         onClick={send(false)}
                         xType={'secondary'}
-                        // дописать
-                        disabled={loading}
-
+                        // 2 - Дизэйблим кнопку, пока строка info равна '...loading'
+                        disabled={info === '...loading'}
                     >
                         Send false
                     </SuperButton>
@@ -109,17 +94,17 @@ const HW13 = () => {
                         id={'hw13-send-undefined'}
                         onClick={send(undefined)}
                         xType={'secondary'}
-                        // дописать
-                        disabled={loading}
+                        // 2 - Дизэйблим кнопку, пока строка info равна '...loading'
+                        disabled={info === '...loading'}
                     >
                         Send undefined
                     </SuperButton>
                     <SuperButton
                         id={'hw13-send-null'}
-                        onClick={send(null)} // имитация запроса на не корректный адрес
+                        onClick={send(null)}
                         xType={'secondary'}
-                        // дописать
-                        disabled={loading}
+                        // 2 - Дизэйблим кнопку, пока строка info равна '...loading'
+                        disabled={info === '...loading'}
                     >
                         Send null
                     </SuperButton>
