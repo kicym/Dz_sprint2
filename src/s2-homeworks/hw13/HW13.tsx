@@ -37,16 +37,15 @@ const HW13 = () => {
             .then((res) => {
                 setCode('Код 200!')
                 setImage(success200)
-                setText(res.data.text)
-                setInfo(res.data.info)
+                setText(res.data.text || res.data.errorText || '')
+                setInfo(res.data.info || '')
             })
             .catch((e) => {
-                // Если сервер ответил и статус ошибки настоящий (например, 400 или 500)
                 if (e.response && e.response.status !== 0) {
                     const status = e.response.status
                     setCode(`Ошибка ${status}!`)
-                    setText(e.response.data.text)
-                    setInfo(e.response.data.info)
+                    setText(e.response.data.text || e.response.data.errorText || '')
+                    setInfo(e.response.data.info || '')
 
                     if (status === 400) {
                         setImage(error400)
@@ -56,8 +55,7 @@ const HW13 = () => {
                         setImage(errorUnknown)
                     }
                 } else {
-                    // Сюда мы гарантированно попадаем при сетевой ошибке (кнопка Send null),
-                    // даже если Axios ошибочно вернул status: 0
+
                     setCode('Ошибка!')
                     setText(e.message)
                     setInfo(e.name)
@@ -76,7 +74,6 @@ const HW13 = () => {
                         id={'hw13-send-true'}
                         onClick={send(true)}
                         xType={'secondary'}
-                        // 2 - Дизэйблим кнопку, пока строка info равна '...loading'
                         disabled={info === '...loading'}
                     >
                         Send true
@@ -85,7 +82,6 @@ const HW13 = () => {
                         id={'hw13-send-false'}
                         onClick={send(false)}
                         xType={'secondary'}
-                        // 2 - Дизэйблим кнопку, пока строка info равна '...loading'
                         disabled={info === '...loading'}
                     >
                         Send false
@@ -94,7 +90,6 @@ const HW13 = () => {
                         id={'hw13-send-undefined'}
                         onClick={send(undefined)}
                         xType={'secondary'}
-                        // 2 - Дизэйблим кнопку, пока строка info равна '...loading'
                         disabled={info === '...loading'}
                     >
                         Send undefined
@@ -103,7 +98,6 @@ const HW13 = () => {
                         id={'hw13-send-null'}
                         onClick={send(null)}
                         xType={'secondary'}
-                        // 2 - Дизэйблим кнопку, пока строка info равна '...loading'
                         disabled={info === '...loading'}
                     >
                         Send null
